@@ -5,8 +5,8 @@ import "time"
 type Ticks struct {
 	Timestamp time.Time
 	Symbol    string
-	BestBid   float64
-	BestAsk   float64
+	BestBid   string
+	BestAsk   string
 }
 
 type TicksRepository interface {

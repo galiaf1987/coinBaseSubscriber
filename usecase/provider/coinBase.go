@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
-	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -117,8 +116,6 @@ func readMessage(c *websocket.Conn, ch chan usecase.Ticks) bool {
 		return false
 	}
 
-	bestBid, err := strconv.ParseFloat(response.BestBid, 64)
-	bestAsk, err := strconv.ParseFloat(response.BestAsk, 64)
 	if err != nil {
 		log.Printf("Convertation error: %s", err)
 		return false
@@ -127,8 +124,8 @@ func readMessage(c *websocket.Conn, ch chan usecase.Ticks) bool {
 	domainEntity := usecase.Ticks{
 		Timestamp: response.Time,
 		Symbol:    response.ProductId,
-		BestBid:   bestBid,
-		BestAsk:   bestAsk,
+		BestBid:   response.BestBid,
+		BestAsk:   response.BestAsk,
 	}
 
 	ch <- domainEntity
