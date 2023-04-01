@@ -3,6 +3,7 @@ package provider
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"github.com/galiaf1987/coinBaseSubscriber/usecase"
 	"log"
 	"net/url"
@@ -55,20 +56,19 @@ func (CoinBase) GetRate(ch chan usecase.Ticks, tool string) {
 	signal.Notify(interrupt, os.Interrupt)
 
 	u := url.URL{Scheme: "wss", Host: *addr}
-	log.Printf("connecting to %s", u.String())
 
-	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
-	if err != nil {
-		log.Fatal("dial:", err)
-	}
+	c := connect(u)
 	defer c.Close()
-
-	done := make(chan struct{})
 
 	subscribe(c, tool)
 
 	go func() {
-		defer close(done)
+		defer func() {
+			fmt.Println("reconnecting")
+			if e := recover(); e != nil {
+				c = connect(u)
+			}
+		}()
 		for {
 			readMessage(c, ch)
 		}
@@ -76,8 +76,6 @@ func (CoinBase) GetRate(ch chan usecase.Ticks, tool string) {
 
 	for {
 		select {
-		case <-done:
-			return
 		case <-interrupt:
 			log.Println("interrupt")
 
@@ -88,13 +86,18 @@ func (CoinBase) GetRate(ch chan usecase.Ticks, tool string) {
 				log.Println("write close:", err)
 				return
 			}
-			select {
-			case <-done:
-			case <-time.After(time.Second):
-			}
 			return
 		}
 	}
+}
+
+func connect(u url.URL) *websocket.Conn {
+	log.Printf("connecting to %s", u.String())
+	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+	if err != nil {
+		log.Fatal("dial:", err)
+	}
+	return c
 }
 
 func readMessage(c *websocket.Conn, ch chan usecase.Ticks) bool {
