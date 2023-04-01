@@ -1,3 +1,2 @@
-Debug  = false
-
 [CoinBaseSubscriber]
+Url = "wss://ws-direct.sandbox.exchange.coinbase.com"

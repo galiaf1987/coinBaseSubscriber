@@ -14,5 +14,5 @@ type TicksRepository interface {
 }
 
 type RateProvider interface {
-	GetRate(ch chan Ticks)
+	GetRate(ch chan Ticks, tool string)
 }
