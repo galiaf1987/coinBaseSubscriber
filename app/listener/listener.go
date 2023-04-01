@@ -54,6 +54,10 @@ func (l Listener) subscribe(ch chan usecase.Ticks, tool string) {
 }
 
 func (l Listener) save(data map[string]usecase.Ticks) bool {
+	if prevTicks == nil {
+		prevTicks = map[string]usecase.Ticks{}
+	}
+
 	var filteredData []usecase.Ticks
 	for key, value := range data {
 		if prevVal, ok := prevTicks[key]; ok && prevVal.Timestamp == value.Timestamp {
@@ -61,7 +65,13 @@ func (l Listener) save(data map[string]usecase.Ticks) bool {
 		}
 
 		filteredData = append(filteredData, value)
+
+		prevTicks[key] = value
 	}
 
-	return l.ticksRepository.SaveMany(filteredData)
+	if len(filteredData) > 0 {
+		return l.ticksRepository.SaveMany(filteredData)
+	}
+
+	return false
 }
