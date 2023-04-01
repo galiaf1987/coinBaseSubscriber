@@ -10,7 +10,7 @@ type Ticks struct {
 }
 
 type TicksRepository interface {
-	Save(ticks Ticks) bool
+	SaveMany(ticks []Ticks) bool
 }
 
 type RateProvider interface {

@@ -6,6 +6,6 @@ type TicketsRepository struct {
 	BaseRepository
 }
 
-func (TicketsRepository) Save(ticks usecase.Ticks) bool {
+func (TicketsRepository) SaveMany(ticks []usecase.Ticks) bool {
 	return true
 }
