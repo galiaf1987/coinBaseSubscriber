@@ -100,7 +100,7 @@ func (CoinBase) GetRate(ch chan usecase.Ticks, tool string) {
 func readMessage(c *websocket.Conn, ch chan usecase.Ticks) bool {
 	_, message, err := c.ReadMessage()
 	if err != nil {
-		log.Printf("Read error: %s", message)
+		log.Printf("Read error: %s", err)
 		return false
 	}
 
