@@ -10,7 +10,7 @@ type Ticks struct {
 }
 
 type TicksRepository interface {
-	SaveMany(ticks []Ticks) bool
+	SaveMany(domainEntities []Ticks) bool
 }
 
 type RateProvider interface {

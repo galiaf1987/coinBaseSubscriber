@@ -1,6 +1,7 @@
 package di
 
 import (
+	"github.com/galiaf1987/coinBaseSubscriber/db"
 	"github.com/galiaf1987/coinBaseSubscriber/environment"
 	"github.com/galiaf1987/coinBaseSubscriber/usecase"
 	"github.com/galiaf1987/coinBaseSubscriber/usecase/provider"
@@ -24,5 +25,6 @@ func NewDI(cfg environment.Config) (di DI) {
 }
 
 func setupRepositoriesForDi(di *DI) {
-	di.TicketsRepository = repository.TicketsRepository{}
+	baseMySqlRepository := repository.BaseRepository{DBConnection: db.GetConnection(di.Config.Database)}
+	di.TicketsRepository = repository.TicketsRepository{BaseRepository: baseMySqlRepository}
 }
