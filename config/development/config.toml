@@ -1,0 +1,9 @@
+[CoinBaseSubscriber]
+Url = "ws-feed-public.sandbox.exchange.coinbase.com"
+
+[Database]
+Host = "localhost"
+Port = 3306
+User = "root"
+Password = "password"
+Database = "testDB"
