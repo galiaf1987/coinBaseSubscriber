@@ -16,8 +16,12 @@ type DI struct {
 
 func NewDI(cfg environment.Config) (di DI) {
 	di = DI{
-		Config:       cfg,
-		RateProvider: provider.CoinBase{},
+		Config: cfg,
+		RateProvider: provider.CoinBase{
+			Options: provider.Options{
+				Url: cfg.CoinBaseSubscriber.Url,
+			},
+		},
 	}
 	setupRepositoriesForDi(&di)
 

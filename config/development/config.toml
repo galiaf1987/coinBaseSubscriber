@@ -1,5 +1,5 @@
 [CoinBaseSubscriber]
-Url = "wss://ws-direct.sandbox.exchange.coinbase.com"
+Url = "ws-feed-public.sandbox.exchange.coinbase.com"
 
 [Database]
 Host = "localhost"

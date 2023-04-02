@@ -18,7 +18,9 @@ type Options struct {
 	Url string
 }
 
-type CoinBase struct{}
+type CoinBase struct {
+	Options Options
+}
 
 type SubscribeRequest struct {
 	Type       string   `json:"type"`
@@ -46,16 +48,14 @@ type TickerResponse struct {
 	LastSize    string    `json:"last_size"`
 }
 
-var addr = flag.String("addr", "ws-feed-public.sandbox.exchange.coinbase.com", "http service address")
-
-func (CoinBase) GetRate(ch chan usecase.Ticks, tool string) {
+func (cb CoinBase) GetRate(ch chan usecase.Ticks, tool string) {
 	flag.Parse()
 	log.SetFlags(0)
 
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
 
-	u := url.URL{Scheme: "wss", Host: *addr}
+	u := url.URL{Scheme: "wss", Host: cb.Options.Url}
 
 	c := connect(u)
 	defer c.Close()
